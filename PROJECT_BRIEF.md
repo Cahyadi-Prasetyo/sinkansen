@@ -237,19 +237,3 @@ Dokumen desain detail tersedia di folder `docs/`:
 | [`docs/dfd.md`](docs/dfd.md) | DFD Level 0 & Level 1 — 10 proses, 8 data store, WebSocket channels |
 
 ---
-
-## 11. Instruksi untuk AI Agent
-
-Jika Anda (AI agent) membaca dokumen ini:
-
-1. Baca juga dokumen desain di `docs/` (ERD, Flowcharts, DFD) untuk konteks
-   teknis yang lebih lengkap.
-2. Ikuti semua aturan bisnis di atas sebagai kebenaran utama — jangan
-   berasumsi sendiri di luar yang tertulis di sini.
-3. Lihat Bagian 8 untuk daftar keputusan yang sudah dibuat. Untuk item
-   yang masih bertanda ⏳, konfirmasi ke user sebelum mengimplementasikan.
-4. Prioritaskan desain mobile-friendly (responsive) di semua interface
-   kecuali Display TV Kampus (yang didesain untuk layar besar/landscape).
-5. Status dosen didorong oleh **API absensi kampus** — bukan jadwal saja.
-   Pastikan arsitektur mendukung integrasi dua arah (polling + webhook).
-6. Tech stack belum ditentukan. Konfirmasi dulu ke user sebelum scaffolding.
