@@ -98,7 +98,7 @@ Berdasarkan kebutuhan responsivitas tinggi, kemudahan integrasi WebSocket, dan e
 | Komponen | Pilihan Utama (Recommended) | Alternatif Dipertimbangkan | Alasan Pemilihan |
 |---|---|---|---|
 | **Frontend Web** | **React.js / Next.js** (Tailwind CSS) | Vue.js / SvelteKit | Ekosistem kaya, performa tinggi untuk dashboard dinamis dan TV display |
-| **Backend API** | **Node.js (NestJS / Express)** | Go (Fiber/Gin) atau Laravel 11 | Penanganan event I/O non-blocking dan WebSocket yang sangat matang |
+| **Backend API** | **Node.js (NestJS / Express)** | Go (Fiber/Gin) atau Laravel 13 | Penanganan event I/O non-blocking dan WebSocket yang sangat matang |
 | **Real-time Server** | **Socket.io / Native WS** | Pusher / Centrifugo | Kemudahan koneksi dua arah dengan fallback otomatis |
 | **Database** | **PostgreSQL** | MySQL 8 | Keandalan ACID, indexing cepat, dan dukungan tipe data JSONB |
 | **Cache & Pub/Sub** | **Redis** | In-memory store | Kecepatan broadcast channel WebSocket dan session caching |
