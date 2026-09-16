@@ -181,7 +181,7 @@ sinkansen/
 ├── PROJECT_BRIEF.md          # Source of truth — konteks, aturan bisnis & keputusan
 ├── README.md                 # Dokumentasi umum & roadmap proyek
 └── docs/
-    ├── erd.md                # ERD detail (11 entitas, tipe data, constraint, index)
+    ├── erd.md                # ERD detail (15 entitas, constraint, index, profil role)
     ├── flowcharts.md         # 6 flowchart alur bisnis (Mermaid)
     └── dfd.md                # DFD Level 0 & Level 1 (Data flow & WebSocket channels)
 ```
@@ -193,13 +193,22 @@ sinkansen/
 | Dokumen | Deskripsi |
 |---|---|
 | [PROJECT_BRIEF.md](PROJECT_BRIEF.md) | Source of truth — konsep, role, aturan bisnis, arsitektur |
-| [docs/erd.md](docs/erd.md) | ERD lengkap — 11 entitas, tipe data, constraint, index, enum |
+| [docs/erd.md](docs/erd.md) | ERD lengkap — 15 entitas, tipe data, constraint, index, enum |
 | [docs/flowcharts.md](docs/flowcharts.md) | 6 flowchart — state machine, registrasi, panggilan, QR, user management |
 | [docs/dfd.md](docs/dfd.md) | DFD Level 0 & 1 — 10 proses, 8 data store, WebSocket channels |
 
 ---
 
+## 🚧 Status Proyek
 
+Proyek saat ini berada di **fase perancangan (Desain & Spesifikasi Arsitektur)**.
+- `[x]` Definisi Konsep & Aturan Bisnis (`PROJECT_BRIEF.md`)
+- `[x]` Perancangan Database / ERD 15 Entitas (`docs/erd.md`)
+- `[x]` Pemodelan Alur Sistem / Flowchart (`docs/flowcharts.md`)
+- `[x]` Pemodelan Aliran Data / DFD (`docs/dfd.md`)
+- `[ ]` Wireframe & Prototipe UI/UX (Figma)
+- `[ ]` Scaffolding Repositori & Docker Setup
+- `[ ]` Pengembangan MVP
 
 ---
 

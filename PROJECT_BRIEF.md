@@ -108,15 +108,20 @@ tapi merupakan route/komponen frontend yang berbeda.
 > rules) tersedia di [`docs/erd.md`](docs/erd.md).
 
 ```
-users
-├─ id, nama, email, password_hash, role (enum: superadmin/admin/dosen/operator)
-├─ fakultas_id (nullable), prodi_id (nullable)
-└─ created_by, is_active
+users (kredensial autentikasi login)
+├─ id, email, password_hash, role (superadmin/admin/dosen/operator)
+└─ is_active, created_by, created_at, updated_at
 
-dosen_profiles (1-1 ke users)
-├─ id, user_id, nip, kode_antrian (unik per dosen, misal "A")
-├─ foto_url
-├─ status_ketersediaan (enum: tersedia/mengajar/tidak_bersedia/pulang)
+superadmin_profiles / admin_profiles / operator_profiles
+├─ profil dibuat terlebih dahulu sebelum akun autentikasi (users) di-generate
+├─ superadmin_profiles: id, user_id (nullable), nama_lengkap, no_telepon, foto_url
+├─ admin_profiles: id, user_id (nullable), nama_lengkap, nip, fakultas_id, no_telepon, foto_url
+└─ operator_profiles: id, user_id (nullable), nama_lengkap, nomor_identitas, fakultas_id, no_telepon
+
+dosen_profiles (profil dosen & status ketersediaan)
+├─ id, user_id (nullable), nama_lengkap, nip, kode_antrian
+├─ fakultas_id, prodi_id (program studi homebase dosen)
+├─ foto_url, status_ketersediaan (tersedia/mengajar/tidak_bersedia/pulang)
 ├─ status_override (boolean), is_absen_masuk (boolean)
 └─ status_updated_at
 
@@ -125,31 +130,36 @@ jadwal_mengajar
 └─ mata_kuliah
 
 jadwal_konsultasi
-├─ id, dosen_id, hari, jam_mulai, jam_selesai
-└─ kuota_harian (nullable = unlimited)
+├─ id, dosen_id, hari, jam_mulai, jam_selesai, kuota_harian
+└─ history_perubahan (JSONB log audit histori perubahan jadwal/kuota), is_active
 
-qr_codes
-├─ id, kode_unik, generated_by (operator_id)
+qr_codes (terhubung ke operator dan superadmin)
+├─ id, kode_unik, generated_by_role (operator/superadmin)
+├─ operator_id (nullable, FK), superadmin_id (nullable, FK)
 └─ tanggal_berlaku, expired_at, status (aktif/expired)
 
-antrian
-├─ id, qr_code_id, dosen_id, nomor_antrian (kode_antrian + urutan, mis. "A-01")
-├─ urutan, nama_mahasiswa, nim, keperluan
-├─ status (enum: menunggu/dipanggil/selesai/tidak_hadir/dilewati)
-└─ created_at, dipanggil_at, selesai_at, tanggal
+form_pendaftaran_konsultasi (input form guest/mahasiswa sebelum nomor antrian)
+├─ id, qr_code_id, dosen_id
+├─ nama, nim, perihal, keterangan
+└─ created_at (auto-success: submit langsung generate tiket antrian)
+
+antrian (tiket antrian terverifikasi dari form pendaftaran)
+├─ id, form_pendaftaran_id (FK unik 1:1), qr_code_id, dosen_id
+├─ nomor_antrian (mis. "A-01"), urutan
+├─ status (menunggu/dipanggil/selesai/tidak_hadir/dilewati)
+└─ tanggal, created_at, dipanggil_at, selesai_at
 
 fakultas / program_studi
-└─ struktur standar akademik
+└─ struktur master data akademik kampus
 
-activity_logs (audit trail — superadmin/admin)
-└─ id, user_id, aksi, target_entity, target_id, timestamp, detail (JSON)
+activity_logs (audit trail sistem)
+└─ id, user_id, aksi, target_entity, target_id, detail (JSON), ip_address, created_at
 
 system_settings (konfigurasi runtime)
 └─ id, key, value, description, updated_by, updated_at
 
 absensi_sync_logs (log integrasi API absensi kampus)
-└─ id, dosen_id, event_type, source, raw_payload, sync_status,
-   error_message, status_before, status_after, synced_at
+└─ id, dosen_id, event_type, source, raw_payload, sync_status, error_message, status_before, status_after, synced_at
 ```
 
 ---
@@ -215,6 +225,11 @@ evaluasi ulang status dosen.
 | 5 | Sumber status dosen | **API absensi kampus** + jadwal sebagai referensi | ✅ Final |
 | 6 | Integrasi API absensi | Dua arah: polling + webhook (belum ada detail API dari kampus) | ⏳ Menunggu arahan |
 | 7 | Deployment | Docker / Docker Compose (self-hosted di server kampus) | ✅ Final |
+| 8 | Profil Terpisah per Role | Tabel `superadmin_profiles`, `admin_profiles`, `operator_profiles`, `dosen_profiles`. Profil dibuat terlebih dahulu, baru akun auth dibuat | ✅ Final (Revisi Dosen) |
+| 9 | Kolom Prodi di Dosen | `prodi_id` ditambahkan di `dosen_profiles` sebagai relasi ke master data prodi | ✅ Final (Revisi Dosen) |
+| 10 | History Jadwal Konsultasi | Kolom `history_perubahan` (JSONB) pada `jadwal_konsultasi` untuk audit trail modifikasi | ✅ Final (Revisi Dosen) |
+| 11 | Form Input Mahasiswa/Guest | Tabel `form_pendaftaran_konsultasi` (nama, nim, dosen_id, perihal, keterangan). Dropdown hanya memunculkan dosen `tersedia`, `mengajar`, `tidak_bersedia` (status `pulang` di-filter). Pendaftaran selalu auto-success langsung menerbitkan antrian | ✅ Final (Revisi Dosen) |
+| 12 | Generator QR Code | Tabel `qr_codes` terhubung langsung ke `operator_profiles` dan `superadmin_profiles` | ✅ Final (Revisi Dosen) |
 
 ---
 
@@ -232,7 +247,7 @@ Dokumen desain detail tersedia di folder `docs/`:
 
 | Dokumen | Isi |
 |---|---|
-| [`docs/erd.md`](docs/erd.md) | ERD lengkap — 11 entitas, tipe data, constraint, index, enum, business rules |
+| [`docs/erd.md`](docs/erd.md) | ERD lengkap — 15 entitas, tipe data, constraint, index, enum, business rules |
 | [`docs/flowcharts.md`](docs/flowcharts.md) | 6 flowchart alur bisnis (Mermaid) — state machine, registrasi, panggilan, QR, user management |
 | [`docs/dfd.md`](docs/dfd.md) | DFD Level 0 & Level 1 — 10 proses, 8 data store, WebSocket channels |
 
