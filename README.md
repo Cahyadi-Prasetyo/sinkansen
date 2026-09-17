@@ -166,11 +166,11 @@ gantt
 
 | Role | Hak Akses & Kewenangan |
 |---|---|
-| **Superadmin** | Kontrol penuh sistem, manajemen fakultas/prodi, audit log global, dan konfigurasi settings |
-| **Admin** | Manajemen akun dosen dan operator di lingkup fakultas yang menjadi wewenangnya |
-| **Operator** | Mengelola dan mencetak/generate QR Code harian untuk display kampus |
-| **Dosen** | Input jadwal, melakukan override ketersediaan, dan memanggil/mengelola antrian konsultasi |
-| **Guest (Mahasiswa)** | Memantau ketersediaan dosen, mendaftar antrian via QR (tanpa akun), dan memantau giliran |
+| **Superadmin** | Kontrol penuh seluruh sistem, manajemen pengguna (alur profil terlebih dahulu baru auth), master data kampus, audit log, dan system settings |
+| **Admin** | Menambahkan Dosen & Operator di fakultas sendiri. Pada tabel data, hanya berwenang **mengedit password** dan **menghapus / menonaktifkan akun** (`is_active = false`) |
+| **Operator** | Men-generate QR Code harian untuk Display TV kampus serta **memoderasi/mem-filter kata-kata tidak pantas** atau menghapus pendaftaran mahasiswa bermasalah |
+| **Dosen** | Edit profil mandiri (foto, nama, prodi, email), update status & lokasi fisik (gedung, ruangan, lokasi lainnya), kelola multi-slot jadwal, dan memanggil antrian (sequential / selective) |
+| **Guest (Mahasiswa)** | Mengakses landing page publik (daftar dosen, lokasi, & nama mahasiswa bimbingan aktif — tanpa QR). Mendaftar antrian hanya dengan scan QR fisik di Display TV kampus |
 
 ---
 
@@ -181,7 +181,8 @@ sinkansen/
 ├── PROJECT_BRIEF.md          # Source of truth — konteks, aturan bisnis & keputusan
 ├── README.md                 # Dokumentasi umum & roadmap proyek
 └── docs/
-    ├── erd.md                # ERD detail (15 entitas, constraint, index, profil role)
+    ├── prd.md                # Product Requirement Document (PRD) lengkap
+    ├── erd.md                # ERD detail (17 entitas, master lokasi gedung/ruangan, profil role)
     ├── flowcharts.md         # 6 flowchart alur bisnis (Mermaid)
     └── dfd.md                # DFD Level 0 & Level 1 (Data flow & WebSocket channels)
 ```
@@ -193,7 +194,8 @@ sinkansen/
 | Dokumen | Deskripsi |
 |---|---|
 | [PROJECT_BRIEF.md](PROJECT_BRIEF.md) | Source of truth — konsep, role, aturan bisnis, arsitektur |
-| [docs/erd.md](docs/erd.md) | ERD lengkap — 15 entitas, tipe data, constraint, index, enum |
+| [docs/prd.md](docs/prd.md) | **Product Requirement Document (PRD)** — visi, personas, user stories, functional & non-functional requirements |
+| [docs/erd.md](docs/erd.md) | ERD lengkap — 17 entitas, tipe data, constraint, index, enum |
 | [docs/flowcharts.md](docs/flowcharts.md) | 6 flowchart — state machine, registrasi, panggilan, QR, user management |
 | [docs/dfd.md](docs/dfd.md) | DFD Level 0 & 1 — 10 proses, 8 data store, WebSocket channels |
 
@@ -203,7 +205,8 @@ sinkansen/
 
 Proyek saat ini berada di **fase perancangan (Desain & Spesifikasi Arsitektur)**.
 - `[x]` Definisi Konsep & Aturan Bisnis (`PROJECT_BRIEF.md`)
-- `[x]` Perancangan Database / ERD 15 Entitas (`docs/erd.md`)
+- `[x]` Penyusunan Product Requirement Document (`docs/prd.md`)
+- `[x]` Perancangan Database / ERD 17 Entitas (`docs/erd.md`)
 - `[x]` Pemodelan Alur Sistem / Flowchart (`docs/flowcharts.md`)
 - `[x]` Pemodelan Aliran Data / DFD (`docs/dfd.md`)
 - `[ ]` Wireframe & Prototipe UI/UX (Figma)
